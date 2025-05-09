@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini-Pin | URL Shortener</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6cf7;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --background-color: #f8f9fa;
+            --card-color: #ffffff;
+            --text-color: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+        }
+
+        .url-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            width: 100%;
+        }
+
+        input[type="url"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        input[type="url"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: #3a5bd9;
+        }
+
+        .error-message {
+            color: #dc3545;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .result-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f7ff;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .result-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .short-url-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: white;
+            padding: 12px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .short-url-text {
+            font-weight: 600;
+            color: var(--primary-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .copy-btn {
+            background-color: transparent;
+            color: var(--secondary-color);
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: var(--border-radius);
+        }
+
+        .copy-btn:hover {
+            background-color: #f1f1f1;
+            color: var(--primary-color);
+        }
+
+        .visit-btn {
+            display: inline-block;
+            background-color: var(--success-color);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .visit-btn:hover {
+            background-color: #218838;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            input[type="url"] {
+                border-radius: var(--border-radius) var(--border-radius) 0 0;
+            }
+
+            button {
+                border-radius: 0 0 var(--border-radius) var(--border-radius);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-link"></i>
+            <h1>Mini-Pin</h1>
+        </div>
+        <p class="subtitle">Shorten your long URLs into memorable links</p>
+
+        <form method="POST" class="url-form">
+            <div class="input-group">
+                <input type="url" name="url" placeholder="Enter your long URL here" required>
+                <button type="submit">Shorten</button>
+            </div>
+            {% if error %}
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+        </form>
+
+        <div class="result-container {% if short_url %}active{% endif %}" id="resultContainer">
+            <h3 class="result-title">Your shortened URL is ready!</h3>
+            <div class="short-url-display">
+                <span class="short-url-text" id="shortUrlText">{{ short_url }}</span>
+                <button class="copy-btn" id="copyBtn" onclick="copyToClipboard()">
+                    <i class="far fa-copy"></i> Copy
+                </button>
+            </div>
+            <a href="{{ short_url }}" class="visit-btn" target="_blank">
+                <i class="fas fa-external-link-alt"></i> Visit URL
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Mini-Pin URL Shortener 
+    </footer>
+
+    <script>
+        function copyToClipboard() {
+            const shortUrl = document.getElementById('shortUrlText').textContent;
+            const fullUrl = window.location.origin + shortUrl;
+            
+            navigator.clipboard.writeText(fullUrl).then(() => {
+                const copyBtn = document.getElementById('copyBtn');
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                copyBtn.style.color = '#28a745';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = '<i class="far fa-copy"></i> Copy';
+                    copyBtn.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+
+        // Show result container if short_url exists
+        document.addEventListener('DOMContentLoaded', function() {
+            const shortUrl = "{{ short_url }}";
+            if (shortUrl) {
+                document.getElementById('resultContainer').classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
